@@ -4,19 +4,19 @@ const listarGeneros = async () => {
     
 };
 
-const buscarIdGenero = async () => {
+const buscarIdGenero = async (id) => {
     
 };
 
-const cadastrarGenero = async () => {
+const cadastrarGenero = async (nome) => {
     
 };
 
-const atualizarGenero = async () => {
+const atualizarGenero = async (id, nome) => {
     
 };
 
-const deletarGenero = async () => {
+const deletarGenero = async (id) => {
     
 };
 

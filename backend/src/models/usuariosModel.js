@@ -4,19 +4,19 @@ const listarUsuarios = async () => {
     
 };
 
-const buscarIdUsuario = async () => {
+const buscarIdUsuario = async (id) => {
     
 };
 
-const cadastrarUsuario = async () => {
+const cadastrarUsuario = async (nome_completo, cpf, email, telefone, data_nascimento) => {
     
 };
 
-const atualizarUsuario = async () => {
+const atualizarUsuario = async (id, nome_completo, cpf, email, telefone, data_nascimento) => {
     
 };
 
-const deletarUsuario = async () => {
+const deletarUsuario = async (id) => {
     
 };
 
