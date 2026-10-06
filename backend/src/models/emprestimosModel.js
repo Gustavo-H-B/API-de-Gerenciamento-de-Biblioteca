@@ -2,7 +2,7 @@ const db = require("../config/database");
 
 const listarEmprestimos = async () => {
     const [emprestimos] = await db.query(
-        "SELECT * FROM emprestimos;"
+        //fazer em join
     );
 
     return emprestimos;
@@ -10,8 +10,7 @@ const listarEmprestimos = async () => {
 
 const buscarIdEmprestimo = async (id) => {
     const [emprestimos] = await db.query(
-        "SELECT * FROM emprestimos WHERE id=?;"
-        [id]
+        //fazer em join
     );
 
     return emprestimos;

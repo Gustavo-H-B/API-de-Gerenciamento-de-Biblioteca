@@ -18,7 +18,7 @@ const buscarIdAutor = async (req, res) => {
     try {
         const id = req.params.id;
 
-        if(!/^\d+$/.test(id)){
+        if (!/^\d+$/.test(id)){
             return res.status(400).json({
                 mensagem: "Id inválido, o id deve ser um número inteiro."
             });
@@ -26,7 +26,7 @@ const buscarIdAutor = async (req, res) => {
 
         const autor = await autoresModel.buscarIdAutor(id);
 
-        if(!autor){
+        if (!autor){
             return res.status(404).json({
                 mensagem: "Autor não encontrado."
             });
@@ -46,25 +46,25 @@ const cadastrarAutor = async (req, res) => {
     try {
         const {nome_completo, nacionalidade, data_nascimento} = req.body;
 
-        if(!nome_completo || nome_completo.trim() === 0){
+        if (!nome_completo || nome_completo.trim() === 0){
             return res.status(400).json({
                 mensagem: "O nome completo é obrigatório e não pode ficar vazio."
             });
         };
 
-        if(nome_completo.length > 150){
+        if (nome_completo.length > 150){
             return res.status(400).json({
                 mensagem: "O nome completo não pode exceder 150 caracteres."
             });
         };
 
-        if(!nacionalidade || nacionalidade.trim() === 0){
+        if (!nacionalidade || nacionalidade.trim() === 0){
             return res.status(400).json({
                 mensagem: "A nacionalidade é obrigatório e não pode ficar vazio."
             });
         };
 
-        if(nacionalidade.length > 80){
+        if (nacionalidade.length > 80){
             return res.status(400).json({
                 mensagem: "A nacionalidade não pode exceder 80 caracteres."
             });
@@ -94,33 +94,41 @@ const atualizarAutor = async (req, res) => {
     try {
         const id = req.params.id;
 
-        if(!/^\d+$/.test(id)){
+        if (!/^\d+$/.test(id)){
             return res.status(400).json({
                 mensagem: "Id inválido, o id deve ser um número inteiro."
             });
         };
 
+        const autor = await autoresModel.buscarIdAutor(id);
+
+        if (!autor){
+            return res.status(404).json({
+                mensagem: "Autor não encontrado."
+            });
+        };
+
         const {nome_completo, nacionalidade, data_nascimento} = req.body;
 
-        if(!nome_completo || nome_completo.trim() === 0){
+        if (!nome_completo || nome_completo.trim() === 0){
             return res.status(400).json({
                 mensagem: "O nome completo é obrigatório e não pode ficar vazio."
             });
         };
 
-        if(nome_completo.length > 150){
+        if (nome_completo.length > 150){
             return res.status(400).json({
                 mensagem: "O nome completo não pode exceder 150 caracteres."
             });
         };
 
-        if(!nacionalidade || nacionalidade.trim() === 0){
+        if (!nacionalidade || nacionalidade.trim() === 0){
             return res.status(400).json({
                 mensagem: "A nacionalidade é obrigatório e não pode ficar vazio."
             });
         };
 
-        if(nacionalidade.length > 80){
+        if (nacionalidade.length > 80){
             return res.status(400).json({
                 mensagem: "A nacionalidade não pode exceder 80 caracteres."
             });
@@ -132,14 +140,6 @@ const atualizarAutor = async (req, res) => {
 
         if (!/^\d{4}-\d{2}-\d{2}$/.test(data_nascimento)) {
             return res.status(400).json({ mensagem: "Formato de data inválido. Use AAAA-MM-DD." });
-        };
-
-        const autor = await autoresModel.buscarIdAutor(id);
-
-        if(!autor){
-            return res.status(404).json({
-                mensagem: "Autor não encontrado."
-            });
         };
 
         const autorAtualizado = await autoresModel.atualizarAutor(id, nome_completo, nacionalidade, data_nascimento);
@@ -161,7 +161,7 @@ const deletarAutor = async (req, res) => {
     try {
         const id = req.params.id;
 
-        if(!/^\d+$/.test(id)){
+        if (!/^\d+$/.test(id)){
             return res.status(400).json({
                 mensagem: "Id inválido, o id deve ser um número inteiro."
             })
@@ -169,7 +169,7 @@ const deletarAutor = async (req, res) => {
 
         const autor = await autoresModel.buscarIdAutor(id);
 
-        if(!autor){
+        if (!autor){
             return res.status(404).json({
                 mensagem: "Autor não encontrado."
             });
