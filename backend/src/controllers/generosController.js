@@ -18,7 +18,7 @@ const buscarIdGenero = async (req, res) => {
     try {
         const id = req.params.id;
 
-        if(!/^\d+$/.test(id)){
+        if (!/^\d+$/.test(id)){
             return res.status(400).json({
                 mensagem: "Id inválido, o id deve ser um número inteiro."
             });
@@ -26,7 +26,7 @@ const buscarIdGenero = async (req, res) => {
         
         const genero = await generosModel.buscarIdGenero(id);
 
-        if(!genero){
+        if (!genero){
             return res.status(404).json({
                 mensagem:"Gênero não encontrado."
             });

@@ -10,7 +10,7 @@ const listarGeneros = async () => {
 
 const buscarIdGenero = async (id) => {
     const [generos] = await db.query(
-        "SELECT * FROM generos WHERE id=?;"
+        "SELECT * FROM generos WHERE id=?;",
         [id]
     );
 
@@ -19,7 +19,7 @@ const buscarIdGenero = async (id) => {
 
 const cadastrarGenero = async (nome) => {
     const genero = await db.query(
-        "INSERT INTO generos (nome) VALUES (?);"
+        "INSERT INTO generos (nome) VALUES (?);",
         [nome]
     );
 
@@ -31,7 +31,7 @@ const cadastrarGenero = async (nome) => {
 
 const atualizarGenero = async (id, nome) => {
     await db.query(
-        "UPDATE generos SET nome=? WHERE id=?;"
+        "UPDATE generos SET nome=? WHERE id=?;",
         [nome, id]
     );
 
@@ -42,7 +42,7 @@ const atualizarGenero = async (id, nome) => {
 
 const deletarGenero = async (id) => {
     const genero = await db.query(
-        "DELETE FROM generos WHERE id=?"
+        "DELETE FROM generos WHERE id=?",
         [id]
     );
 

@@ -10,7 +10,7 @@ const listarUsuarios = async () => {
 
 const buscarIdUsuario = async (id) => {
     const [usuarios] = await db.query(
-        "SELECT * FROM usuarios WHERE id=?;"
+        "SELECT * FROM usuarios WHERE id=?;",
         [id]
     );
 
