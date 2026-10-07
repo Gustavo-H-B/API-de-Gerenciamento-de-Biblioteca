@@ -35,7 +35,7 @@ const cadastrarEmprestimo = async (data_emprestimo, data_devolucao, id_livro, id
     );
 
     return {
-        id : emprestimo.insertId,
+        id : emprestimo[0].insertId,
         data_emprestimo,
         data_devolucao,
         id_livro,

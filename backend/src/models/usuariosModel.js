@@ -24,7 +24,7 @@ const cadastrarUsuario = async (nome_completo, cpf, email, telefone, data_nascim
     );
 
     return {
-        id : usuario.insertId,
+        id : usuario[0].insertId,
         nome_completo,
         cpf,
         email,

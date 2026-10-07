@@ -24,7 +24,7 @@ const cadastrarGenero = async (nome) => {
     );
 
     return {
-        id : genero.insertId,
+        id : genero[0].insertId,
         nome
     };
 };

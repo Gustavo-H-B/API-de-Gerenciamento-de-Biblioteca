@@ -24,7 +24,7 @@ const cadastrarAutor = async (nome_completo, nacionalidade, data_nascimento) => 
     );
 
     return {
-        id: autor.insertId,
+        id: autor[0].insertId,
         nome_completo,
         nacionalidade,
         data_nascimento

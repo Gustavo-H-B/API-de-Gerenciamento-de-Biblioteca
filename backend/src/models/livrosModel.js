@@ -24,7 +24,7 @@ const cadastrarLivro = async (titulo, isbn, ano_publicado, numero_paginas, sinop
     );
 
     return {
-        id: livro.insertId,
+        id: livro[0].insertId,
         titulo,
         isbn,
         ano_publicado,
