@@ -53,8 +53,8 @@ CREATE TABLE emprestimos (
     data_devolucao DATE NOT NULL,
     id_livro INT NOT NULL,
     id_usuario INT NOT NULL,
-    CONSTRAINT fk_emprestimos_livro FOREIGN KEY (id_livro) REFERENCES livros (id) ON DELETE RESTRICT,
-    CONSTRAINT fk_emprestimos_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id) ON DELETE RESTRICT
+    CONSTRAINT fk_emprestimos_livro FOREIGN KEY (id_livro) REFERENCES livros (id) ON DELETE cascade,
+    CONSTRAINT fk_emprestimos_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id) ON DELETE cascade
 );
 
 INSERT INTO generos (nome) VALUES
@@ -102,3 +102,15 @@ INSERT INTO emprestimos (data_emprestimo, data_devolucao, id_livro, id_usuario) 
 ('2026-09-01', '2026-09-15', 1, 3),
 ('2026-09-10', '2026-09-24', 2, 1),
 ('2026-09-15', '2026-09-29', 5, 2);
+
+truncate usuarios;
+
+alter table usuarios
+MODIFY cpf VARBINARY(32) not null,
+MODIFY telefone BIGINT not null unique,
+add cpf_iv BINARY(12) NOT NULL AFTER cpf,
+add cpf_tag BINARY(16) NOT NULL AFTER cpf_iv,
+add senha_hash BINARY(64) NOT NULL AFTER telefone,
+add senha_salt BINARY(16) NOT NULL AFTER senha_hash;
+
+SELECT * FROM usuarios;

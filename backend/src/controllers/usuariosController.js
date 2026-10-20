@@ -1,10 +1,35 @@
 const usuariosModel = require("../models/usuariosModel");
+const { gerarHashSenha, verificarHashSenha } = require("../utils/crypto/hash");
+const { criptografar, descriptografar } = require("../utils/crypto/criptografia");
 
 const listarUsuarios = async (req, res) => {
     try {
         const usuarios = await usuariosModel.listarUsuarios();
+        
+        if (!usuarios || usuarios.length === 0){
+            return res.status(404).json({
+                mensagem: "Nenhum usuário encontrado."
+            });
+        };
 
-        res.status(200).json(usuarios);
+        const usuariosFormatados = usuarios.map(usuario => {
+            const cpfDescriptografado = descriptografar({
+                ivArmazenado: usuario.cpf_iv, 
+                tagArmazenada: usuario.cpf_tag, 
+                valorArmazenado: usuario.cpf
+            });
+            
+            return {
+                id: usuario.id,
+                cpf: cpfDescriptografado,
+                nomeCompleto: usuario.nome_completo,
+                dataAniversario: usuario.data_aniversario,
+                email: usuario.email,
+                telefone: usuario.telefone
+            };
+        });
+        
+        res.status(200).json(usuariosFormatados);
 
     } catch (erro) {
         console.error(erro);
@@ -31,8 +56,21 @@ const buscarIdUsuario = async (req, res) => {
                 mensagem:"Usuário não encontrado."
             });
         };
+
+        const cpf = descriptografar({
+            ivArmazenado: usuario.cpf_iv, 
+            tagArmazenada: usuario.cpf_tag, 
+            valorArmazenado: usuario.cpf
+        });
         
-        res.status(200).json(usuario);
+        res.status(200).json({
+            id: usuario.id,
+            cpf: cpf,
+            nomeCompleto: usuario.nome_completo,
+            dataAniversario: usuario.data_aniversario,
+            email: usuario.email,
+            telefone: usuario.telefone
+        });
 
     } catch (erro) {
         console.error(erro);
@@ -44,7 +82,9 @@ const buscarIdUsuario = async (req, res) => {
 
 const cadastrarUsuario = async (req, res) => {
     try {
-        const {nome_completo, cpf, email, telefone, data_nascimento} = req.body;
+        const {nome_completo, cpf, email, telefone, senha, data_nascimento} = req.body;
+        const { salt, hash } = await gerarHashSenha(senha);
+        const { iv, tag, valorCriptografado } = criptografar(cpf);
 
         if (!nome_completo || nome_completo.trim() === 0){
             return res.status(400).json({
@@ -64,12 +104,6 @@ const cadastrarUsuario = async (req, res) => {
             });
         };
 
-        if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(cpf)) {
-            return res.status(400).json({
-                mensagem: "Formato do cpf inválido. Use xxx.xxx.xxx-xx."
-            });
-        };
-
         if (!email || email.trim() === 0){
             return res.status(400).json({
                 mensagem: "O email é obrigatório e não pode ficar vazio."
@@ -82,9 +116,9 @@ const cadastrarUsuario = async (req, res) => {
             });
         };
 
-        if (!/^\(\d{2}\) \d{4,5}-\d{4}$/.test(telefone)) {
+        if (!telefone) {
             return res.status(400).json({
-                mensagem: "Formato do telefone inválido. Use (xx) xxxxx-xxxx ou (xx) xxxx-xxxx."
+                mensagem: "Um número de telefone é obrigatório"
             });
         };
 
@@ -99,10 +133,22 @@ const cadastrarUsuario = async (req, res) => {
                 mensagem: "Formato de data inválido. Use AAAA-MM-DD."
             });
         };
+        
+        await usuariosModel.cadastrarUsuario({
+            nome_completo,
+            cpf: valorCriptografado, 
+            cpf_iv: iv, 
+            cpf_tag: tag, 
+            email, 
+            telefone, 
+            senha_hash: hash, 
+            senha_salt: salt,
+            data_nascimento
+        });
 
-        const novoUsuario = await usuariosModel.cadastrarUsuario(nome_completo, cpf, email, telefone, data_nascimento);
-
-        return res.status(201).json(novoUsuario);
+        return res.status(201).json({
+            mensagem: "Usuário criado com sucesso."
+        });
 
     } catch (erro) {
         console.error(erro);

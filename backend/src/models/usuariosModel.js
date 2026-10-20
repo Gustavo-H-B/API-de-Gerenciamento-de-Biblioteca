@@ -17,20 +17,13 @@ const buscarIdUsuario = async (id) => {
     return usuarios[0];
 };
 
-const cadastrarUsuario = async (nome_completo, cpf, email, telefone, data_nascimento) => {
-    const usuario = await db.query (
-    "INSERT INTO usuarios (nome_completo, cpf, email, telefone, data_nascimento) VALUES (?, ?, ?, ?, ?);"
-    [nome_completo, cpf, email, telefone, data_nascimento]
+const cadastrarUsuario = async ({nome_completo, cpf, cpf_iv, cpf_tag, email, telefone, senha_hash, senha_salt, data_nascimento}) => {
+    const [usuario] = await db.query (
+    "INSERT INTO usuarios (nome_completo, cpf, cpf_iv, cpf_tag, email, telefone, senha_hash, senha_salt, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+    [nome_completo, cpf, cpf_iv, cpf_tag, email, telefone, senha_hash, senha_salt, data_nascimento]
     );
 
-    return {
-        id : usuario[0].insertId,
-        nome_completo,
-        cpf,
-        email,
-        telefone,
-        data_nascimento
-    };
+    return usuario;
 };
 
 const atualizarUsuario = async (id, nome_completo, cpf, email, telefone, data_nascimento) => {
