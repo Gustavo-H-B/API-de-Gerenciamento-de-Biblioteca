@@ -1,4 +1,6 @@
 const livrosModel = require("../models/livrosModel");
+const { gerarHashSenha, verificarHashSenha } = require("../utils/crypto/hash");
+const { criptografar, descriptografar } = require("../utils/crypto/criptografia");
 
 const listarLivros = async (req, res) => {
     try {

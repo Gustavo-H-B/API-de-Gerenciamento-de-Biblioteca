@@ -1,12 +1,32 @@
 const emprestimosModel = require("../models/emprestimosModel");
 const livrosModel = require("../models/livrosModel");
 const usuariosModel = require("../models/usuariosModel");
+const { gerarHashSenha, verificarHashSenha } = require("../utils/crypto/hash");
+const { criptografar, descriptografar } = require("../utils/crypto/criptografia");
 
 const listarEmprestimos = async (req, res) => {
     try {
         const emprestimos = await emprestimosModel.listarEmprestimos();
 
-        res.status(200).json(emprestimos);
+        const emprestimoFormatado = emprestimos.map(emprestimo =>{
+            const revelarCpf = descriptografar({
+                ivArmazenado: emprestimo.cpf_iv, 
+                tagArmazenada: emprestimo.cpf_tag, 
+                valorArmazenado: emprestimo.cpf
+            });
+
+            return {
+                id: emprestimo.id,
+                data_emprestimo: emprestimo.data_emprestimo,
+                data_devolucao: emprestimo.data_devolucao,
+                Titulo_da_Obra: emprestimo["Titulo da Obra"],
+                Autor: emprestimo["Autor"],
+                Usuário: emprestimo["Usuário"],
+                cpf: revelarCpf
+            };
+        });
+
+        res.status(200).json(emprestimoFormatado);
 
     } catch (erro) {
         console.error(erro);
@@ -33,8 +53,22 @@ const buscarIdEmprestimo = async (req, res) => {
                 mensagem:"Empréstimo não encontrado."
             });
         };
+
+        const revelarCpf = descriptografar({
+            ivArmazenado: emprestimo.cpf_iv, 
+            tagArmazenada: emprestimo.cpf_tag, 
+            valorArmazenado: emprestimo.cpf
+        });
         
-        res.status(200).json(emprestimo);
+        res.status(200).json({
+            id: emprestimo.id,
+            data_emprestimo: emprestimo.data_emprestimo,
+            data_devolucao: emprestimo.data_devolucao,
+            Titulo_da_Obra: emprestimo["Titulo da Obra"],
+            Autor: emprestimo["Autor"],
+            Usuário: emprestimo["Usuário"],
+            cpf: revelarCpf
+        });
 
     } catch (erro) {
         console.error(erro);
@@ -70,9 +104,9 @@ const cadastrarEmprestimo = async (req, res) => {
             });
         };
 
-        id_livro = await livrosModel.buscarIdLivro(id);
+        const livro = await livrosModel.buscarIdLivro(id_livro);
 
-        if (!id_livro){
+        if (!livro){
             return res.status(404).json({
                 mensagem:"O id do livro não encontrado."
             });
@@ -83,10 +117,10 @@ const cadastrarEmprestimo = async (req, res) => {
                 mensagem: "Id inválido, o id deve ser um número inteiro."
             });
         };
+        
+        const usuario = await usuariosModel.buscarIdUsuario(id_usuario);
 
-        id_usuario = await usuariosModel.buscarIdUsuario(id);
-
-        if (!id_usuario){
+        if (!usuario){
             return res.status(404).json({
                 mensagem:"O id do usuario não encontrado."
             });

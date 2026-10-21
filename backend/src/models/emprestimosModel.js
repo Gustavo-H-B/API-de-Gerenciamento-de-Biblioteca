@@ -2,7 +2,7 @@ const db = require("../config/database");
 
 const listarEmprestimos = async () => {
     const [emprestimos] = await db.query(
-        `SELECT emprestimos.id, emprestimos.data_emprestimo, emprestimos.data_devolucao, livros.titulo as "Titulo da Obra", autores.nome_completo as "Autor", usuarios.nome_completo as "Usuário", usuarios.cpf
+        `SELECT emprestimos.id, emprestimos.data_emprestimo, emprestimos.data_devolucao, livros.titulo as "Titulo da Obra", autores.nome_completo as "Autor", usuarios.nome_completo as "Usuário", usuarios.cpf, usuarios.cpf_iv, usuarios.cpf_tag
         FROM emprestimos
         INNER JOIN usuarios ON emprestimos.id_usuario = usuarios.id
         INNER JOIN livros ON emprestimos.id_livro = livros.id
@@ -15,7 +15,7 @@ const listarEmprestimos = async () => {
 
 const buscarIdEmprestimo = async (id) => {
     const [emprestimos] = await db.query(
-        `SELECT emprestimos.id, emprestimos.data_emprestimo, emprestimos.data_devolucao, livros.titulo as "Titulo da Obra", autores.nome_completo as "Autor", usuarios.nome_completo as "Usuário", usuarios.cpf
+        `SELECT emprestimos.id, emprestimos.data_emprestimo, emprestimos.data_devolucao, livros.titulo as "Titulo da Obra", autores.nome_completo as "Autor", usuarios.nome_completo as "Usuário", usuarios.cpf, usuarios.cpf_iv, usuarios.cpf_tag
         FROM emprestimos
         INNER JOIN usuarios ON emprestimos.id_usuario = usuarios.id
         INNER JOIN livros ON emprestimos.id_livro = livros.id

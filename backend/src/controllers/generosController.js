@@ -1,4 +1,6 @@
 const generosModel = require("../models/generosModel");
+const { gerarHashSenha, verificarHashSenha } = require("../utils/crypto/hash");
+const { criptografar, descriptografar } = require("../utils/crypto/criptografia");
 
 const listarGeneros = async (req, res) => {
     try {

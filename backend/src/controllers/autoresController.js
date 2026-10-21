@@ -1,4 +1,6 @@
 const autoresModel = require("../models/autoresModel");
+const { gerarHashSenha, verificarHashSenha } = require("../utils/crypto/hash");
+const { criptografar, descriptografar } = require("../utils/crypto/criptografia");
 
 const listarAutores = async (req, res) => {
     try {
