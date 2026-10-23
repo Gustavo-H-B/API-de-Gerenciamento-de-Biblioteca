@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const livrosController = require("../controllers/livrosController");
 
-router.get("/livros", livrosController.listarLivros);
-router.get("/livros/:id", livrosController.buscarIdLivro);
-router.post("/livros", livrosController.cadastrarLivro);
-router.put("/livros/:id", livrosController.atualizarLivro);
-router.delete("/livros/:id", livrosController.deletarLivro);
+router.get("/", livrosController.listarLivros);
+router.get("/:id", livrosController.buscarIdLivro);
+router.post("/", livrosController.cadastrarLivro);
+router.put("/:id", livrosController.atualizarLivro);
+router.delete("/:id", livrosController.deletarLivro);
 
 module.exports = router;

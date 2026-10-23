@@ -161,82 +161,49 @@ const cadastrarUsuario = async (req, res) => {
 const atualizarUsuario = async (req, res) => {
     try {
         const id = await req.params.id;
-
-        if (!/^\d+$/.test(id)){
-            return res.status(400).json({
-                mensagem: "Id inválido, o id deve ser um número inteiro."
-            });
-        };
-
         const usuario = await usuariosModel.buscarIdUsuario(id);
 
-        if (!usuario){
+        if(!usuario){
             return res.status(404).json({
-                mensagem:"Usuário não encontrado."
+                mensagem: "Usuário não encontrado."
             });
         };
 
-        const {nome_completo, cpf, email, telefone, data_nascimento} = req.body;
+        const {nome_completo, cpf, email, telefone, senha, data_nascimento} = req.body;
+        const dadosAtualizados = {};
 
-        if (!nome_completo || nome_completo.trim() === 0){
-            return res.status(400).json({
-                mensagem: "O nome completo é obrigatório e não pode ficar vazio."
-            });
+        if(nome_completo !== undefined) {
+            dadosAtualizados.nome_completo = nome_completo;
         };
 
-        if (nome_completo.length > 150){
-            return res.status(400).json({
-                mensagem: "O nome completo não pode exceder 150 caracteres."
-            });
+        if(email !== undefined) {
+            dadosAtualizados.email = email;
         };
 
-        if (!cpf || cpf.trim() === 0){
-            return res.status(400).json({
-                mensagem: "O cpf é obrigatório e não pode ficar vazio."
-            });
+        if(telefone !== undefined) {
+            dadosAtualizados.telefone = nomeCompleto;
         };
 
-        if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(cpf)) {
-            return res.status(400).json({
-                mensagem: "Formato do cpf inválido. Use xxx.xxx.xxx-xx."
-            });
+        if(data_nascimento !== undefined) {
+            dadosAtualizados.data_nascimento = data_nascimento;
         };
 
-        if (!email || email.trim() === 0){
-            return res.status(400).json({
-                mensagem: "O email é obrigatório e não pode ficar vazio."
-            });
+        if(cpf !== undefined) {
+            const {iv: cpf_iv, tag: cpf_tag, valorCriptografado: cpfCriptografado} = criptografar(cpf)
+            dadosAtualizados.cpf = cpfCriptografado;
+            dadosAtualizados.cpf_iv = cpf_iv;
+            dadosAtualizados.cpf_tag = cpf_tag;
         };
 
-        if (email.length > 150){
-            return res.status(400).json({
-                mensagem: "O email não pode exceder 150 caracteres."
-            });
+        if(senha !== undefined) {
+            const {salt: senha_salt, hash: senha_hash} = gerarHashSenha(senha);
+            dadosAtualizados.senha_salt = senha_salt;
+            dadosAtualizados.senha_hash =senha_hash;
         };
 
-        if (!/^\(\d{2}\) \d{4,5}-\d{4}$/.test(telefone)) {
-            return res.status(400).json({
-                mensagem: "Formato do telefone inválido. Use (xx) xxxxx-xxxx ou (xx) xxxx-xxxx."
-            });
-        };
-
-        if (!data_nascimento || data_nascimento.trim().length === 0) {
-            return res.status(400).json({
-                mensagem: "A data de nascimento é obrigatória."
-            });
-        };
-
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(data_nascimento)) {
-            return res.status(400).json({
-                mensagem: "Formato de data inválido. Use AAAA-MM-DD."
-            });
-        };
-
-        const usuarioAtualiado = await usuariosModel.atualizarUsuario(nome_completo, cpf, email, telefone, data_nascimento);
-
-        res.status(200).json({
-            mensagem: "Cadastro do usuário atualizado.",
-            usuario: usuarioAtualiado
+        await usuariosModel.atualizarUsuario(id, dadosAtualizados);
+        return res.status(202).json({
+            mensagem: "Usuário editado com sucesso."
         });
 
     } catch (erro) {

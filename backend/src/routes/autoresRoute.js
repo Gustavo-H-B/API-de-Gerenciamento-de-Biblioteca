@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const autoresController = require("../controllers/autoresController");
 
-router.get("/autores", autoresController.listarAutores);
-router.get("/autores/:id", autoresController.buscarIdAutor);
-router.post("/autores", autoresController.cadastrarAutor);
-router.put("/autores/:id", autoresController.atualizarAutor);
-router.delete("/autores/:id", autoresController.deletarAutor);
+router.get("/", autoresController.listarAutores);
+router.get("/:id", autoresController.buscarIdAutor);
+router.post("/", autoresController.cadastrarAutor);
+router.put("/:id", autoresController.atualizarAutor);
+router.delete("/:id", autoresController.deletarAutor);
 
 module.exports = router;

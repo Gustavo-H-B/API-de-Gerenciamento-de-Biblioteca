@@ -26,19 +26,37 @@ const cadastrarUsuario = async ({nome_completo, cpf, cpf_iv, cpf_tag, email, tel
     return usuario;
 };
 
-const atualizarUsuario = async (id, nome_completo, cpf, email, telefone, data_nascimento) => {
-    await db.query(
-        "UPDATE usuarios SET nome_completo=?, cpf=?, email=?, telefone=?, data_nascimento=? WHERE id=?;"
-        [nome_completo, cpf, email, telefone, data_nascimento, id]
-    );
+const atualizarUsuario = async (id, dados) => {
+    const camposPermitidos = [
+        "nome_completo",
+        "cpf", 
+        "cpf_iv", 
+        "cpf_tag", 
+        "email", 
+        "telefone", 
+        "senha_hash", 
+        "senha_salt", 
+        "data_nascimento"
+    ];
 
-    return {
-        nome_completo,
-        cpf,
-        email,
-        telefone,
-        data_nascimento
+    const campos = Object.keys(dados);
+
+    if(campos.length === 0 || campos.some(campo => !camposPermitidos.includes(campo))) {
+        throw new Error("Dados para atualização inválidos");
     };
+
+    const atribuicoes = campos.map(campo => `${campo} = ?`).join(", ");
+    const valores = campos.map(campo => dados[campo]);
+    const sql = `
+        UPDATE usuarios
+        SET ${atribuicoes}
+        WHERE id = ?;
+    `;
+
+    console.log(sql);
+    const [resultado] = await db.execute(sql, [...valores, id]);
+
+    return resultado;
 };
 
 const deletarUsuario = async (id) => {
