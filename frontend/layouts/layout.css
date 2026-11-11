@@ -1,0 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+footer {
+    margin: 5px solid black;
+    background-color: #ACD99C;
+}
+
+header {
+    margin: 5px solid black;
+    background-color: #ACD99C;
+}
