@@ -1,19 +1,25 @@
 * {
-    margin: 0;
+    border: 0;
     padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 footer {
-    margin: 5px solid black;
     background-color: #ACD99C;
+    border: 5px solid;
+    border-color: black;
 }
 
 header {
-    margin: 5px solid black;
     background-color: #ACD99C;
+    border: 5px solid;
+    border-color: black;
+    display: flex;
 }
 
 .logotipo {
-    margin: 5px solid black;
     background-color: #00813b;
+    border: 5px solid;
+    border-color: black;
 }
